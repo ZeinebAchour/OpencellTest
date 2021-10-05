@@ -4,14 +4,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.util.Arrays;
 import java.util.Date;
 
@@ -25,6 +23,23 @@ public class XmlFileVerification {
 			File targetDirectory = new File(DIRECTORY + "reject/");
 
 			File targetFile = new File(DIRECTORY + "reject/" + file.getName());
+
+			
+			if (!targetDirectory.exists()) {
+				targetDirectory.mkdir();
+			}
+
+			targetFile.createNewFile();
+
+		}
+	}
+	
+	private static void moveToTreatedDirectory(File file) throws IOException {
+		if (file != null) {
+			System.out.println("file treated +++++");
+			File targetDirectory = new File(DIRECTORY + "treated/");
+
+			File targetFile = new File(DIRECTORY + "treated/" + file.getName());
 
 			
 			if (!targetDirectory.exists()) {
@@ -119,6 +134,47 @@ public class XmlFileVerification {
 						moveToRejectDirectory(file);
 
 					}
+					
+					System.out.println(elements[1]);
+					String Identifiant_Flux=eElement.getElementsByTagName("Identifiant_Flux").item(0).getTextContent();
+					System.out.println(
+							"Identifiant_Flux: " + Identifiant_Flux);
+					if(!(Identifiant_Flux.equals(elements[1])) ) {
+						System.err.println("ERR_INT_001");
+						
+						
+					}
+					
+					System.out.println(elements[2]);
+					String Identifiant_Destinataire=eElement.getElementsByTagName("Identifiant_Destinataire").item(0).getTextContent();
+					System.out.println(
+							"Identifiant_Destinataire: " + Identifiant_Destinataire);
+					if(!(Identifiant_Destinataire.equals(elements[2])) ) {
+						System.err.println("ERR_INT_002");
+						
+						
+					}
+					
+					System.out.println(elements[4]);
+					String DIR_Enedis=eElement.getElementsByTagName("DIR_Enedis").item(0).getTextContent();
+					System.out.println(
+							"DIR_Enedis: " + DIR_Enedis);
+					if(!(DIR_Enedis.equals(elements[4])) ) {
+						System.err.println("ERR_INT_003");
+						
+						
+					}
+					
+					
+					if(!(DIR_Enedis.equals(elements[4])) || !(Identifiant_Destinataire.equals(elements[2])) || !(Identifiant_Flux.equals(elements[1])))
+					{
+						moveToRejectDirectory(file);
+						
+					}
+					else {
+						moveToTreatedDirectory(file);
+					}
+					
 
 				}
 			}
